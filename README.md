@@ -1,16 +1,3 @@
 # Omicron
 
-Micro ORM
-
-```
-drop table if exists users;
-
-create table users (
-   id integer primary key,
-   email varchar(60) not null,
-   password varchar(20) not null,
-   firstname varchar(60),
-   lastname varchar(60),
-   phone varchar(20)
-);
-```
+&Omicron; (Omicron) es una pequeña clase ORM para PHP. Su nombre se debe al parecido con la pronunciación de MicroORM. Consta de un archivo model.php (2,7K)
