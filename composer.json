@@ -1,0 +1,42 @@
+{
+   "name": "jmouriz/omicron",
+   "description": "PHP MicroORM",
+   "version": "1.0.0",
+   "license": "MIT",
+   "require":
+   {
+      "php": "^5.3.3 || ^7.0"
+   },
+   "require-dev":
+   {
+      "erusev/parsedown": "^1.6",
+      "phpdocumentor/phpdocumentor": "^2.8"
+   },
+   "autoload":
+   {
+      "files":
+      [
+         "model.php"
+      ]
+   },
+   "repositories":
+   [
+      {
+         "type": "vcs",
+         "url": "https://github.com/jmouriz/omicron"
+      }
+   ],
+   "authors":
+   [
+      {
+         "name": "Juan Manuel Mouriz",
+         "email": "jmouriz@gmail.com",
+         "homepage": "https://jmouriz.github.io",
+         "role": "Developer"
+      }
+   ],
+   "support":
+   {
+      "email": "jmouriz@gmail.com"
+   }
+}
