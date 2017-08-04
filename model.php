@@ -9,9 +9,16 @@ namespace ORM;
 
 use \PDO;
 
-$string = 'sqlite:database.db';
-$username = null;
-$password = null;
+$__string = 'sqlite:database.db';
+$__username = null;
+$__password = null;
+
+function connect($string, $username = null, $passwprd = null) {
+   global $__string, $__username, $__password;
+   $__string = $string;
+   $__username = $username;
+   $__password = $password;
+}
 
 /**
  * Clase que representa un modelo de datos
@@ -26,6 +33,11 @@ class Model {
     * @property array $fields Los campos de la tabla
     */
    protected $fields = array();
+
+   /**                                                                                                                                                              
+    * @property array $protected Campos que deben ser protegidos
+    */
+   protected $protected = array();
 
    /**
     * @property string $table El nombre de la tabla
@@ -46,12 +58,12 @@ class Model {
     * @ignore
     */
    public function __construct() {
-      global $string, $database, $password;
+      global $__string, $__username, $__password;
       $options = array(
          PDO::ATTR_PERSISTENT => true,
          PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
       );
-      $this->connection = new PDO($string, $database, $password, $options);
+      $this->connection = new PDO($__string, $__username, $__password, $options);
       $this->data = (object) array();
    }
 
@@ -102,7 +114,13 @@ class Model {
     * @return object La fila actual
     */
    public function get() {
-      return $this->data;
+      $data = $this->data;
+      foreach ($this->protected as $protected) {                                                                                                                    
+         if (property_exists($data, $protected)) {
+            unset($data->$protected);
+         }
+      }
+      return $data;
    }
 
    /**
@@ -137,7 +155,8 @@ class Model {
     * @return array Todos los registros de la tabla
     */
    public function all() {
-      $query = $this->query("select * from {$this->table}");
+      $fields = implode(',', array_diff($this->fields, $this->protected)); 
+      $query = $this->query("select $fields from {$this->table}");
       return $query->fetchAll(PDO::FETCH_OBJ);
    }
 
