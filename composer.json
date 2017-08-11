@@ -1,7 +1,7 @@
 {
    "name": "jmouriz/omicron",
    "description": "PHP MicroORM",
-   "version": "1.1.0",
+   "version": "1.2.1",
    "license": "MIT",
    "require":
    {

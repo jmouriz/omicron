@@ -13,7 +13,7 @@ $__string = 'sqlite:database.db';
 $__username = null;
 $__password = null;
 
-function connect($string, $username = null, $passwprd = null) {
+function connect($string, $username = null, $password = null) {
    global $__string, $__username, $__password;
    $__string = $string;
    $__username = $username;
@@ -30,9 +30,9 @@ class Model {
    protected $connection;
 
    /**
-    * @property array $fields Los campos de la tabla
+    * @property array $columns Los campos de la tabla
     */
-   protected $fields = array();
+   protected $columns = array();
 
    /**                                                                                                                                                              
     * @property array $protected Campos que deben ser protegidos
@@ -78,7 +78,7 @@ class Model {
     * @ignore
     */
    public function __set($key, $value) {
-      if (in_array($key, $this->fields)) {
+      if (in_array($key, $this->columns)) {
          $this->data->$key = $value;
       }
    }
@@ -155,8 +155,8 @@ class Model {
     * @return array Todos los registros de la tabla
     */
    public function all() {
-      $fields = implode(',', array_diff($this->fields, $this->protected)); 
-      $query = $this->query("select $fields from {$this->table}");
+      $columns = implode(',', array_diff($this->columns, $this->protected)); 
+      $query = $this->query("select $columns from {$this->table}");
       return $query->fetchAll(PDO::FETCH_OBJ);
    }
 
@@ -193,9 +193,9 @@ class Model {
     * Inserta una fila
     */
    public function insert() {
-      $fields = implode(',', $this->fields);
-      $values = implode(',:', $this->fields);
-      $this->query("insert into {$this->table} ($fields) values (:$values)");
+      $columns = implode(',', $this->columns);
+      $values = implode(',:', $this->columns);
+      $this->query("insert into {$this->table} ($columns) values (:$values)");
       $this->key($this->connection->lastInsertId());
    }
 
