@@ -173,11 +173,19 @@ class Model {
    /**
     * Selecciona todos los registros de la tabla
     *
+    * @param int|0 $limit Cantidad máxima de registros
+    * @param int|1 $page Número de página
+    *
     * @return array Todos los registros de la tabla
     */
-   public function all() {
+   public function all($limit = 0, $page = 1) {
       $columns = implode(',', array_diff($this->columns, $this->protected)); 
-      $query = $this->query("select $columns from {$this->table}");
+      $sentence = "select $columns from {$this->table}";
+      if ($limit) {
+         $first = $limit * ($page - 1);
+         $sentence .= " limit $first, $limit";
+      }
+      $query = $this->query($sentence);
       return $query->fetchAll(PDO::FETCH_OBJ);
    }
 
