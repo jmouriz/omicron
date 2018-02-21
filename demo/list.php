@@ -2,6 +2,8 @@
 require 'model/product.php';
 $product = new Product();
 $count = $product->count();
+$page = array_key_exists('page', $_GET) ? $_GET['page'] : 1;
+$limit = 5;
 ?>
 <!doctype html>
 <html lang="es">
@@ -11,6 +13,22 @@ $count = $product->count();
       <style>
          span.red {
             color: red;
+         }
+
+         .scroll {
+            padding: 3px;
+            margin: 6px;
+            background-color: gray;
+         }
+
+         a.scroll {
+            text-decoration: none;
+            color: white;
+         }
+
+         span.scroll {
+            color: darkgray;
+            cursor: not-allowed;
          }
       </style>
    </head>
@@ -22,7 +40,8 @@ $count = $product->count();
       <?php else: ?>
          <span class="red">No hay productos para mostrar</span>
       <?php endif ?>
-      <p>
+      </p>
+      <p><a href="edit.php">Agregar</a></p>
       <table>
          <thead>
             <tr>
@@ -34,7 +53,8 @@ $count = $product->count();
             </tr>
          </thead>
          <tbody>
-            <?php foreach ($product->all() as $key => $value): ?>
+            <?php $rows = 1; ?>
+            <?php foreach ($product->all($limit, $page) as $key => $value): ?>
             <tr>
                <td><?php print $value->id; ?></td>
                <td><?php print $value->detail; ?></td>
@@ -43,9 +63,31 @@ $count = $product->count();
                <td><a href="edit.php?id=<?php print $value->id; ?>">Editar</a></td>
                <td><a href="delete.php?id=<?php print $value->id; ?>">Eliminar</a></td>
             </tr>
+            <?php $rows++; ?>
             <?php endforeach ?>
+            <?php for ($row = $rows; $row <= $limit; $row++): ?>
+            <tr><td colspan="7">&nbsp;</td></tr>
+            <?php endfor ?>
          </tbody>
       </table>
-      <p><a href="edit.php">Agregar</a></p>
+      <?php if ($count > $limit): ?>
+      <p>
+         <?php if ($page > 1): ?>
+         <a class="scroll" href="list.php?page=1">|&lt;&lt;</a>
+         <a class="scroll" href="list.php?page=<?php print $page - 1; ?>">&lt;&lt;</a>
+         <?php else: ?>
+         <span class="scroll">|&lt;&lt;</span>
+         <span class="scroll">&lt;&lt;</span>
+         <?php endif ?>
+
+         <?php if ($count > $page * $limit): ?>
+         <a class="scroll" href="list.php?page=<?php print $page + 1; ?>">&gt;&gt;</a>
+         <a class="scroll" href="list.php?page=<?php print ceil($count / $limit); ?>">&gt;&gt;|</a>
+         <?php else: ?>
+         <span class="scroll">&gt;&gt;</span>
+         <span class="scroll">&gt;&gt;|</span>
+         <?php endif ?>
+      </p>
+      <?php endif ?>
    </body>
 </html>
