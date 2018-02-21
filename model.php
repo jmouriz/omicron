@@ -2,7 +2,7 @@
 /**
  * @package ORM
  * @author Juan Manuel Mouriz <jmouriz@gmail.com>
- * @copyright 2017 Juan Manuel Mouriz
+ * @copyright 2018 Juan Manuel Mouriz
  * @license https://opensource.org/licenses/mit-license.php The MIT License
  */
 namespace ORM;
@@ -34,7 +34,7 @@ class Model {
     */
    protected $columns = array();
 
-   /**                                                                                                                                                              
+   /**
     * @property array $protected Campos que deben ser protegidos
     */
    protected $protected = array();
@@ -63,8 +63,10 @@ class Model {
          PDO::ATTR_PERSISTENT => true,
          PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
       );
+      set_exception_handler(array($this, 'exception'));
       $this->connection = new PDO($__string, $__username, $__password, $options);
       $this->data = (object) array();
+      restore_exception_handler();
    }
 
    /**
@@ -93,6 +95,15 @@ class Model {
    }
 
    /**
+    * @ignore
+    */
+   function exception($exception) {
+     $message = $exception->getMessage();
+     $code = $exception->getCode();
+     die("$code: $message");
+   }
+
+   /**
     * Ejecuta una sentencia SQL
     *
     * @param string $sql La sentencia a ejecutar
@@ -109,13 +120,23 @@ class Model {
    }
 
    /**
+    * Cuenta los registros
+    *
+    * @return int La cantidad de registros
+    */
+   public function count() {
+      $query = $this->query("select count(*) as count from {$this->table}");
+      return (int) $query->fetchAll(PDO::FETCH_OBJ)->count;
+   }
+
+   /**
     * Devuelve la fila actual
     *
     * @return object La fila actual
     */
    public function get() {
       $data = $this->data;
-      foreach ($this->protected as $protected) {                                                                                                                    
+      foreach ($this->protected as $protected) {
          if (property_exists($data, $protected)) {
             unset($data->$protected);
          }

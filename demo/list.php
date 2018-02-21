@@ -10,6 +10,7 @@ $product = new Product();
    </head>
    <body>
       <h1>Productos</h1>
+      <p><?php print $product->count() ?> productos encontrados</p>
       <table>
          <thead>
             <tr>
