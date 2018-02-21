@@ -126,7 +126,7 @@ class Model {
     */
    public function count() {
       $query = $this->query("select count(*) as count from {$this->table}");
-      return (int) $query->fetchAll(PDO::FETCH_OBJ)->count;
+      return (int) $query->fetch(PDO::FETCH_OBJ)->count;
    }
 
    /**
